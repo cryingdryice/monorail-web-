@@ -1,4 +1,4 @@
-# 🎮 Monorail - 2인용 실시간 턴제 타일 배치 게임 🚂  
+`# 🎮 Monorail - 2인용 실시간 턴제 타일 배치 게임 🚂  
 > **전략과 두뇌싸움**  
 > 상대와 번갈아 타일을 배치하며 길을 이어라!  
 > 원작: 더 지니어스 모노레일 https://namu.wiki/w/%EB%AA%A8%EB%85%B8%EB%A0%88%EC%9D%BC(%EA%B2%8C%EC%9E%84)
@@ -17,14 +17,14 @@
 
 ### 🖥️ 데스크탑
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/1bff079d-0422-47a0-9576-4fb7384b19c8" width="45%" />
-  <img src="https://github.com/user-attachments/assets/60219b0b-0e21-4649-9b39-5957135dac44" width="45%" />
+  <img src="https://github.com/user-attachments/assets/be2ffade-5d8a-403a-8248-2576546b9c04" width="45%" />
+  <img src="https://github.com/user-attachments/assets/18115a66-2945-4e2c-aef2-f02ddcdee432" width="45%" />
 </p>
 
 ### 📱 모바일
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/649e142b-731f-4af7-8968-2a126fb9ede6" width="30%" />
-  <img src="https://github.com/user-attachments/assets/09b092a3-4cbd-49e7-82ae-31975ff4f457" width="30%" />
+  <img src="https://github.com/user-attachments/assets/02e5bb0e-6de2-4652-a488-d0537af16214" width=30%" />
+  <img src="https://github.com/user-attachments/assets/03f8c9bb-6fcc-40f5-b3d4-ae08c5849803" width="30%" />
 </p>
 
 ---
@@ -93,7 +93,7 @@
 ---
 
 ## 🎮 플레이 데모 영상  
-![monorail-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/f8363db2-282b-43b7-9216-cc7beb7cec30)
+![monorail-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/502220db-4f1a-4e08-aaa7-07aeafcd8e9d)
 
 
 ---
