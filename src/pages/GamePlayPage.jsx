@@ -8,6 +8,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useGameWebSocket } from "hooks/useGameWebSocket";
 import { checkLoop } from "utiles/checkLoop";
 import usePreventRefresh from "hooks/usePreventRefresh";
+import { Background } from "components/ui/background";
 
 // 타일 종류 정의
 const tileTypes = ["0", "1", "2", "3", "4", "5"];
@@ -186,18 +187,7 @@ export default function GamePlayPage() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-black text-white">
-      {/* Background grid pattern */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <div className="grid h-full w-full grid-cols-[repeat(20,1fr)] grid-rows-[repeat(20,1fr)]">
-          {Array.from({ length: 400 }).map((_, i) => (
-            <div key={i} className="border border-gray-700" />
-          ))}
-        </div>
-      </div>
-
-      {/* Glowing orbs in background */}
-      <div className="absolute left-1 top-1/4 h-32 w-32 rounded-full bg-purple-100/20 blur-3xl" />
-      <div className="absolute bottom-1/4 right-1 h-40 w-40 rounded-full bg-cyan-100/20 blur-3xl" />
+      <Background />
 
       {/* 상대방 닉네임 */}
       <div className="absolute top-2 text-2xl font-semibold text-gray-300 z-10">
