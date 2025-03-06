@@ -2,7 +2,7 @@ import { Button } from "components/ui/button";
 import { Input } from "components/ui/input";
 import { Loader2 } from "lucide-react";
 
-export function MatchingForm({nickname, isMatching ,setNickname, sendMatchRequest}){
+export function MatchingForm({nickname, isMatching ,setNickname, sendMatchRequest, sendMatchCancelRequest}){
     return(
         <div className="z-10 w-full max-w-md px-4">
         <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-6 backdrop-blur-sm">
@@ -22,7 +22,7 @@ export function MatchingForm({nickname, isMatching ,setNickname, sendMatchReques
               disabled={isMatching}
             />
 
-            <Button
+            {/* <Button
               onClick={() => sendMatchRequest(nickname)}
               disabled={!nickname || isMatching}
               className="h-12 w-full flex rounded-xl items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-purple-600 text-white transition-all hover:from-cyan-600 hover:to-purple-700 disabled:opacity-50"
@@ -35,7 +35,31 @@ export function MatchingForm({nickname, isMatching ,setNickname, sendMatchReques
               ) : (
                 <span className="w-[150px] text-center">MATCH</span>
               )}
+            </Button> */}
+            <Button
+              onClick={() => {
+                if (isMatching) {
+                  sendMatchCancelRequest(nickname);
+                } else {
+                  sendMatchRequest(nickname);
+                }
+              }}
+              disabled={!nickname} // ✅ nickname이 없으면 버튼 비활성화
+              className={`h-12 w-full flex rounded-xl items-center justify-center gap-2 
+                bg-gradient-to-r from-cyan-500 to-purple-600 text-white transition-all 
+                hover:from-cyan-600 hover:to-purple-700 
+                ${!nickname ? "opacity-50 cursor-not-allowed" : ""}`}
+            >
+              {isMatching ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <span>MATCH CANCEL</span>
+                </>
+              ) : (
+                <span className="w-[150px] text-center">MATCH</span>
+              )}
             </Button>
+
           </div>
 
           <div className="mt-6 text-center text-xs text-gray-500">

@@ -6,7 +6,6 @@ import TileSelector from "components/GameBoard/TileSelector";
 import { useLocation, useParams } from "react-router-dom";
 import { useGameWebSocket } from "hooks/useGameWebSocket";
 import { checkLoop } from "utiles/checkLoop";
-import usePreventRefresh from "hooks/usePreventRefresh";
 import { Background } from "components/ui/background";
 import { GameInfoBar } from "components/GamePlay/GameInfoBar";
 import { ButtonGroup } from "components/GamePlay/ButtonGroup";
@@ -33,7 +32,7 @@ export default function GamePlayPage() {
   const opponentName = location.state?.opponentName || "Unknown Player";
   const playerId = location.state?.playerId || "null"; // ✅ playerId 확인
   const { gameStatus, isMyTurn, winner, surrender, victory, endTurn, impossible } = useGameWebSocket(roomId, playerId, location.state?.isFirst, setBoardState, setTilesCount);
-  usePreventRefresh(surrender);
+  // usePreventRefresh(surrender);
 
   // 타일 배치 함수 (GameBoard에서 호출)
   const placeTile = (row, col) => {

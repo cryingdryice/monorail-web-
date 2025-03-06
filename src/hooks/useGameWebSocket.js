@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 
-const SOCKET_URL = "http://3.36.103.12:8080/ws-game";
+const SOCKET_URL = "http://localhost:8080/ws-game";
+// const SOCKET_URL = "http://3.36.103.12:8080/ws-game";
 
 export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTilesCount) {
     const stompClient = useRef(null);
