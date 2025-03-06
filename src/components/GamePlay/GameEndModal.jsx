@@ -1,0 +1,14 @@
+export function GameEndModal({isWinner}){
+    return (
+        <div className="z-20 fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 backdrop-blur-md">
+          <div className="w-[400px] h-[300px] flex flex-col items-center justify-center p-6 bg-gray-900 rounded-2xl shadow-lg border border-gray-700 animate-fade-in">
+            <h2 className="text-4xl font-bold text-cyan-400">게임 종료</h2>
+            {isWinner ? (
+              <p className="mt-4 text-2xl text-white">승리했습니다!</p>
+            ) : (
+              <p className="mt-4 text-2xl text-white">패배했습니다!</p>
+            )}
+          </div>
+        </div>
+    );
+};

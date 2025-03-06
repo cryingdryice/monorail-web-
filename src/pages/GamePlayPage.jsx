@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "components/ui/button";
 import GameBoard from "components/GameBoard/GameBoard";
 import TileSelector from "components/GameBoard/TileSelector";
 import { useLocation, useParams } from "react-router-dom";
@@ -9,6 +8,9 @@ import { useGameWebSocket } from "hooks/useGameWebSocket";
 import { checkLoop } from "utiles/checkLoop";
 import usePreventRefresh from "hooks/usePreventRefresh";
 import { Background } from "components/ui/background";
+import { GameInfoBar } from "components/GamePlay/GameInfoBar";
+import { ButtonGroup } from "components/GamePlay/ButtonGroup";
+import { GameEndModal } from "components/GamePlay/GameEndModal";
 
 // 타일 종류 정의
 const tileTypes = ["0", "1", "2", "3", "4", "5"];
@@ -201,34 +203,10 @@ export default function GamePlayPage() {
       <TileSelector tileTypes={tileTypes} selectedTile={selectedTile} setSelectedTile={setSelectedTile} />
 
       {/* 타이머 & 남은 타일 */}
-      <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mt-4 text-lg sm:text-2xl font-semibold z-10 text-center">
-        <div>남은 시간: <span className="text-red-500">{timeLeft}초</span></div>
-        <div>남은 타일: <span className="text-red-500">{tilesCount}</span></div>
-      </div>
+      <GameInfoBar timeLeft={timeLeft} tilesCount={tilesCount} />
 
       {/* 버튼 그룹 */}
-      <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-4 z-10">
-        {isMyTurn && (placedTiles.length === 0) && (gameStatus !== "impossible") ? (
-          <Button className="w-28 h-10 sm:w-32 sm:h-12 md:w-40 md:h-14 text-lg sm:text-xl bg-red-600 hover:bg-red-700 rounded-xl" 
-            onClick={() => {setTimeLeft(60); impossible()}}>불가능</Button>
-        ) : (
-          <Button className="w-28 h-10 sm:w-32 sm:h-12 md:w-40 md:h-14 text-lg sm:text-xl bg-red-600 hover:bg-red-700 rounded-xl" disabled>
-            불가능
-          </Button>
-        )}
-        {isMyTurn ? (
-          <Button className="w-28 h-10 sm:w-32 sm:h-12 md:w-40 md:h-14 text-lg sm:text-xl bg-yellow-500 hover:bg-yellow-600 rounded-xl" onClick={checkEnd}>
-            배치 완료
-          </Button>
-        ) : (
-          <Button className="w-28 h-10 sm:w-32 sm:h-12 md:w-40 md:h-14 text-lg sm:text-xl bg-yellow-500 hover:bg-yellow-600 rounded-xl" disabled>
-            상대 턴...
-          </Button>
-        )}
-        <Button className="w-28 h-10 sm:w-32 sm:h-12 md:w-40 md:h-14 text-lg sm:text-xl bg-gray-700 hover:bg-gray-800 rounded-xl" onClick={surrender}>
-          항복
-        </Button>
-      </div>
+      <ButtonGroup isMyTurn={isMyTurn} placedTiles={placedTiles} gameStatus={gameStatus} setTimeLeft={setTimeLeft} impossible={impossible} checkEnd={checkEnd} surrender={surrender}/>
 
       {notification && (
         <div className="z-20 absolute top-6 right-6 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg">
@@ -238,21 +216,12 @@ export default function GamePlayPage() {
 
       {gameStatus === "impossible" && (
         <div className="z-20 absolute top-2 right-0 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in">
-        불가능 선언!
+          불가능 선언!
         </div>
       )}
 
       {gameStatus === "ended" && (
-        <div className="z-20 fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 backdrop-blur-md">
-          <div className="w-[400px] h-[300px] flex flex-col items-center justify-center p-6 bg-gray-900 rounded-2xl shadow-lg border border-gray-700 animate-fade-in">
-            <h2 className="text-4xl font-bold text-cyan-400">게임 종료</h2>
-            {winner === playerId ? (
-              <p className="mt-4 text-2xl text-white">승리했습니다!</p>
-            ) : (
-              <p className="mt-4 text-2xl text-white">패배했습니다!</p>
-            )}
-          </div>
-        </div>
+        <GameEndModal isWinner={winner===playerId} />
       )}
     </div>
   );
