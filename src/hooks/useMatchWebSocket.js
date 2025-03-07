@@ -36,12 +36,12 @@ export function useMatchWebSocket() {
 
       client.subscribe(`/queue/match/${clientId.current}`, (message) => {
         const data = JSON.parse(message.body);
+        console.log(data);
 
         if(data.isFirst === "canceled"){
           setShowCancelInfo(true);
           setIsMatching(false);
           setTimeout(()=>{
-            console.log("취소!");
             setShowCancelInfo(false);
           }, 3000);
         }

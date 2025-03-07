@@ -1,7 +1,6 @@
 import { Button } from "components/ui/button";
 
 export function ButtonGroup({isMyTurn, placedTiles, gameStatus, setTimeLeft, impossible, checkEnd, surrender}){
-    console.log(placedTiles)
     return(
         <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-4 z-10">
             {isMyTurn && (placedTiles.length === 0) && (gameStatus !== "impossible") ? (
