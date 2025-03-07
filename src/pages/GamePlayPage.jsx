@@ -94,33 +94,21 @@ export default function GamePlayPage() {
 
   // 턴 종료 함수
   const checkEnd = () => {
-    if(gameStatus === "impossible"){
-      if(checkLoop(boardState)){
-        victory();
-      }else{
-        surrender();
-      }
-
-      setTilesPlaced(0);
-      setTimeLeft(60);
-      setPlacedTiles([]);
-      return;
+    if (gameStatus === "impossible") {
+      // 불가능일 때 승패
+      endTurn(boardState, tilesCount);
+      checkLoop(boardState) ? victory("completed") : surrender("unfinished");
+    } else if (tilesPlaced === 0) {
+      return showNotification("최소 1개 이상의 타일을 배치해야 턴을 종료할 수 있습니다!");
+    } else {
+      // 일반적인 턴종료
+      endTurn(boardState, tilesCount);
+      if (checkLoop(boardState)) victory("completed");
     }
-
-    if (tilesPlaced === 0) {
-        showNotification("최소 1개 이상의 타일을 배치해야 턴을 종료할 수 있습니다!");
-        return;
-    }
-
+  
     setTilesPlaced(0);
     setTimeLeft(60);
     setPlacedTiles([]);
-    endTurn(boardState, tilesCount);
-
-    // 길이 이어져 이겼다면 승리 메시지 전송
-    if(checkLoop(boardState)){
-      victory();
-    }
   };
   
   useEffect(() => {
@@ -129,7 +117,7 @@ export default function GamePlayPage() {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev === 1) {
-          surrender(); // ✅ 시간 초과 시 자동 항복
+          surrender("timeover"); // ✅ 시간 초과 시 자동 항복
           clearInterval(timer);
           return 0;
         }
@@ -179,8 +167,11 @@ export default function GamePlayPage() {
         </div>
       )}
 
-      {gameStatus === "ended" && (
-        <GameEndModal isWinner={winner===playerId} />
+      {["completed", "unfinished", "timeover", "surrender", "disconnected"].includes(gameStatus) && (
+        <GameEndModal 
+          isWinner={winner === playerId} 
+          cause={gameStatus}
+        />
       )}
     </div>
   );

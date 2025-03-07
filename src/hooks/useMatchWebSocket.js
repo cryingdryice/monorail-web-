@@ -4,8 +4,8 @@ import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import { v4 as uuidv4 } from "uuid";
 
-const SOCKET_URL = "http://localhost:8080/ws-game";
-// const SOCKET_URL = "http://3.36.103.12:8080/ws-game";
+// const SOCKET_URL = "http://localhost:8080/ws-game";
+const SOCKET_URL = "http://3.36.103.12:8080/ws-game";
 
 export function useMatchWebSocket() {
   const stompClient = useRef(null);
