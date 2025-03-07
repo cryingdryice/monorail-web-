@@ -10,12 +10,14 @@ import { Background } from "components/ui/background";
 import { GameInfoBar } from "components/GamePlay/GameInfoBar";
 import { ButtonGroup } from "components/GamePlay/ButtonGroup";
 import { GameEndModal } from "components/GamePlay/GameEndModal";
+import { checkStraigh, checkStraightLine } from "utiles/checkStraight";
+import { checkAdjacent } from "utiles/checkAdjacent";
 
 // 타일 종류 정의
 const tileTypes = ["0", "1", "2", "3", "4", "5"];
 
 export default function GamePlayPage() {
-  const [tilesCount, setTilesCount] = useState(16);
+  const [tilesCount, setTilesCount] = useState(16); // 남은 타일 개수
   const [tilesPlaced, setTilesPlaced] = useState(0); // 현재 턴에서 배치한 타일 개수
   const [placedTiles, setPlacedTiles] = useState([]); // 이번 턴에서 놓은 타일들의 좌표 저장
   const [timeLeft, setTimeLeft] = useState(60); // 타이머 (30초)
@@ -27,12 +29,12 @@ export default function GamePlayPage() {
     return initialBoard;
   });
   const [notification, setNotification] = useState(null);
-  const { roomId } = useParams();
+
+  const { roomId } = useParams(); // url에서 rommId받아옴
   const location = useLocation();
-  const opponentName = location.state?.opponentName || "Unknown Player";
-  const playerId = location.state?.playerId || "null"; // ✅ playerId 확인
+  const opponentName = location.state?.opponentName || "Unknown Player"; // 상대방 닉네임
+  const playerId = location.state?.playerId || "null"; // ✅ playerId 확인 // 내 아이디
   const { gameStatus, isMyTurn, winner, surrender, victory, endTurn, impossible } = useGameWebSocket(roomId, playerId, location.state?.isFirst, setBoardState, setTilesCount);
-  // usePreventRefresh(surrender);
 
   // 타일 배치 함수 (GameBoard에서 호출)
   const placeTile = (row, col) => {
@@ -55,6 +57,7 @@ export default function GamePlayPage() {
       return;
     }
   
+    // 불가능선언 상황이 아닐 경우
     if(gameStatus !== "impossible"){
       // 🚫 한 턴에 3개 이상 배치할 수 없음
       if (tilesPlaced >= 3) {
@@ -63,24 +66,13 @@ export default function GamePlayPage() {
       }
     
       // ✅ 기존 타일과 인접한지 확인
-      const adjacentTiles = [
-        [row - 1, col],
-        [row + 1, col],
-        [row, col - 1],
-        [row, col + 1]
-      ];
-    
-      const isAdjacent = adjacentTiles.some(([r, c]) => {
-        return r >= 0 && r < 10 && c >= 0 && c < 10 && boardState[r][c] !== null;
-      });
-    
-      if (!isAdjacent) {
+      if (!checkAdjacent(boardState, row, col)) {
         showNotification("기존 타일과 맞닿아야 합니다!");
         return;
       }
 
       // ✅ 이번 턴에서 놓은 타일들이 일직선인지 확인
-      if (!checkStraightLine(placedTiles, { row, col })) {
+      if (!checkStraigh(placedTiles, { row, col })) {
         showNotification("이번 턴에 놓은 타일들은 반드시 일직선을 이루어야 합니다!");
         return;
       }
@@ -98,38 +90,6 @@ export default function GamePlayPage() {
 
     // ✅ 이번 턴에서 놓은 타일 좌표 저장
     setPlacedTiles(prev => [...prev, { row, col }]);
-  };
-
-  const checkStraightLine = (tiles, newTile) => {
-    if (tiles.length === 0) return true; // ✅ 첫 번째 타일은 무조건 배치 가능
-
-    // ✅ 기존 놓은 타일들의 행(row)과 열(col) 배열
-    const rows = tiles.map(t => t.row);
-    const cols = tiles.map(t => t.col);
-
-    // ✅ 새 타일을 포함한 모든 타일이 같은 행에 있는지 확인
-    const sameRow = [...rows, newTile.row].every(r => r === tiles[0].row);
-
-    // ✅ 새 타일을 포함한 모든 타일이 같은 열에 있는지 확인
-    const sameCol = [...cols, newTile.col].every(c => c === tiles[0].col);
-
-    // 🚨 일직선이 아니면 false 반환
-    if (!(sameRow || sameCol)) return false;
-
-    // ✅ 이번 턴에서 놓은 타일들과 연결(인접)되어 있는지 확인
-    const allTiles = [...tiles, newTile].sort((a, b) => 
-        sameRow ? a.col - b.col : a.row - b.row
-    );
-
-    for (let i = 0; i < allTiles.length - 1; i++) {
-        const curr = allTiles[i];
-        const next = allTiles[i + 1];
-
-        if (sameRow && Math.abs(curr.col - next.col) !== 1) return false; // 🚨 열이 1칸 차이 아니면 false
-        if (sameCol && Math.abs(curr.row - next.row) !== 1) return false; // 🚨 행이 1칸 차이 아니면 false
-    }
-
-    return true; // ✅ 모든 조건을 만족하면 true 반환
   };
 
   // 턴 종료 함수

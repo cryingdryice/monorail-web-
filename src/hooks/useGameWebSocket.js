@@ -52,37 +52,7 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
             });
         });
 
-        // ✅ [1] 사용자가 페이지를 떠날 때 자동 항복 (데스크톱 & 일부 모바일)
-        const handleUnload = () => {
-            if (stompClient.current && stompClient.current.connected) {
-                surrender();
-            }
-        };
-
-        // ✅ [2] 모바일에서 백그라운드로 가면 자동 항복
-        const handleVisibilityChange = () => {
-            if (document.hidden) { // 사용자가 다른 탭으로 이동하거나, 모바일에서 앱을 백그라운드로 전환하면
-                if (stompClient.current && stompClient.current.connected) {
-                    surrender();
-                }
-            }
-        };
-
-        // ✅ [3] iOS에서 `beforeunload` 대체 (Safari 대응)
-        const handlePageHide = () => {
-            if (stompClient.current && stompClient.current.connected) {
-                surrender();
-            }
-        };
-
-        window.addEventListener("beforeunload", handleUnload); // 데스크톱 브라우저
-        document.addEventListener("visibilitychange", handleVisibilityChange); // 모바일 백그라운드 감지
-        window.addEventListener("pagehide", handlePageHide); // iOS Safari 대응
-
         return () => {
-            window.removeEventListener("beforeunload", handleUnload);
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-            window.removeEventListener("pagehide", handlePageHide);
             if (client.connected) {
                 client.disconnect();
                 setGameStatus("playing");
@@ -93,9 +63,8 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
     }, []);
 
     const surrender = () => {
-        console.log("🚨 사용자가 페이지를 떠남 → 자동 항복 처리");
         stompClient.current.send(
-            "/app/game/surrender",
+            "/app/game/defeat",
             {},
             JSON.stringify({ roomId, loserId: playerId })
         );
