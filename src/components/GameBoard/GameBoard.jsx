@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, memo, useCallback } from "react";
 import { Tiles } from "components/tiles";
 

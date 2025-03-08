@@ -8,19 +8,10 @@ const trackBaseStyle = {
 };
 
 const trackInnerStyle = {
-  stroke: "#2a3f4d",
-  strokeWidth: "8",
-  strokeLinecap: "round",
-};
-
-const energyGlowStyle = {
   stroke: "#4eeaff",
   strokeWidth: "4",
   strokeLinecap: "round",
   filter: "drop-shadow(0px 0px 5px rgba(78, 234, 255, 0.8)) drop-shadow(0px 0px 12px rgba(78, 234, 255, 0.5))",
-  strokeDasharray: "20, 20",
-  strokeDashoffset: "40", // 초기값 설정
-  animation: "energyFlow 1.5s linear infinite",
 };
 
 const Tiles = memo(({ type }) => {
@@ -33,9 +24,6 @@ const Tiles = memo(({ type }) => {
         
         {/* Track inner */}
         <line x1="10" y1="50" x2="90" y2="50" style={trackInnerStyle} />
-        
-        {/* Energy flow */}
-        <line x1="10" y1="50" x2="90" y2="50" style={energyGlowStyle} />
         
         {/* Connection nodes */}
         <circle cx="10" cy="50" r="6" style={{ fill: "#1a2e3b" }} />
@@ -52,9 +40,6 @@ const Tiles = memo(({ type }) => {
         
         {/* Track inner */}
         <line x1="50" y1="10" x2="50" y2="90" style={trackInnerStyle} />
-        
-        {/* Energy flow */}
-        <line x1="50" y1="10" x2="50" y2="90" style={energyGlowStyle} />
         
         {/* Connection nodes */}
         <circle cx="50" cy="10" r="6" style={{ fill: "#1a2e3b" }} />
@@ -73,10 +58,6 @@ const Tiles = memo(({ type }) => {
         {/* Track inner */}
         <line x1="90" y1="50" x2="50" y2="50" style={trackInnerStyle} />
         <line x1="50" y1="50" x2="50" y2="10" style={trackInnerStyle} />
-        
-        {/* Energy flow */}
-        <line x1="90" y1="50" x2="50" y2="50" style={energyGlowStyle} />
-        <line x1="50" y1="50" x2="50" y2="10" style={energyGlowStyle} />
         
         {/* Connection nodes */}
         <circle cx="90" cy="50" r="6" style={{ fill: "#1a2e3b" }} />
@@ -101,10 +82,6 @@ const Tiles = memo(({ type }) => {
         <line x1="10" y1="50" x2="50" y2="50" style={trackInnerStyle} />
         <line x1="50" y1="50" x2="50" y2="10" style={trackInnerStyle} />
         
-        {/* Energy flow */}
-        <line x1="10" y1="50" x2="50" y2="50" style={energyGlowStyle} />
-        <line x1="50" y1="50" x2="50" y2="10" style={energyGlowStyle} />
-        
         {/* Connection nodes */}
         <circle cx="10" cy="50" r="6" style={{ fill: "#1a2e3b" }} />
         <circle cx="10" cy="50" r="3" style={{ fill: "#4eeaff", filter: "drop-shadow(0px 0px 5px rgba(78, 234, 255, 0.8))" }} />
@@ -127,10 +104,6 @@ const Tiles = memo(({ type }) => {
         {/* Track inner */}
         <line x1="10" y1="50" x2="50" y2="50" style={trackInnerStyle} />
         <line x1="50" y1="50" x2="50" y2="90" style={trackInnerStyle} />
-        
-        {/* Energy flow */}
-        <line x1="10" y1="50" x2="50" y2="50" style={energyGlowStyle} />
-        <line x1="50" y1="50" x2="50" y2="90" style={energyGlowStyle} />
         
         {/* Connection nodes */}
         <circle cx="10" cy="50" r="6" style={{ fill: "#1a2e3b" }} />
@@ -155,10 +128,6 @@ const Tiles = memo(({ type }) => {
         <line x1="90" y1="50" x2="50" y2="50" style={trackInnerStyle} />
         <line x1="50" y1="50" x2="50" y2="90" style={trackInnerStyle} />
         
-        {/* Energy flow */}
-        <line x1="90" y1="50" x2="50" y2="50" style={energyGlowStyle} />
-        <line x1="50" y1="50" x2="50" y2="90" style={energyGlowStyle} />
-        
         {/* Connection nodes */}
         <circle cx="90" cy="50" r="6" style={{ fill: "#1a2e3b" }} />
         <circle cx="90" cy="50" r="3" style={{ fill: "#4eeaff", filter: "drop-shadow(0px 0px 5px rgba(78, 234, 255, 0.8))" }} />
@@ -174,23 +143,7 @@ const Tiles = memo(({ type }) => {
     ),
   }
 
-  return (
-    <>
-      {tileShapes[type]}
-
-      {/* ✅ CSS 애니메이션 적용 */}
-      <style jsx>{`
-        @keyframes energyFlow {
-          0% {
-            stroke-dashoffset: 40;
-          }
-          100% {
-            stroke-dashoffset: 0;
-          }
-        }
-      `}</style>
-    </>
-  );
+  return tileShapes[type] || null;
 });
 
 export { Tiles };

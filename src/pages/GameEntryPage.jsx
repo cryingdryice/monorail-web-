@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useMatchWebSocket } from "hooks/useMatchWebSocket";
 import { Background } from "components/ui/background";

@@ -1,5 +1,3 @@
-"use client"
-
 export function MatchedModal({ sub, content }) {
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/30 animate-in fade-in duration-300">

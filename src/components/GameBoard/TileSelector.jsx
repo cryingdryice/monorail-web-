@@ -1,4 +1,3 @@
-"use client"
 import { Tiles } from "components/tiles"
 
 export default function TileSelector({ tileTypes, selectedTile, setSelectedTile }) {
