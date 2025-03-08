@@ -1,4 +1,4 @@
-`# 🎮 Monorail - 2인용 실시간 턴제 타일 배치 게임 🚂  
+# 🎮 Monorail - 2인용 실시간 턴제 타일 배치 게임 🚂  
 > **전략과 두뇌싸움**  
 > 상대와 번갈아 타일을 배치하며 길을 이어라!  
 > 원작: 더 지니어스 모노레일 https://namu.wiki/w/%EB%AA%A8%EB%85%B8%EB%A0%88%EC%9D%BC(%EA%B2%8C%EC%9E%84)
@@ -17,14 +17,14 @@
 
 ### 🖥️ 데스크탑
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/be2ffade-5d8a-403a-8248-2576546b9c04" width="45%" />
-  <img src="https://github.com/user-attachments/assets/18115a66-2945-4e2c-aef2-f02ddcdee432" width="45%" />
+  <img src="https://github.com/user-attachments/assets/8a031a97-9ab9-4af0-8f7d-e3bc98bb9bed" width="45%" />
+  <img src="https://github.com/user-attachments/assets/3cac1407-15d5-4107-95e3-c2c5bd3b945c" width="45%" />
 </p>
 
 ### 📱 모바일
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/02e5bb0e-6de2-4652-a488-d0537af16214" width=30%" />
-  <img src="https://github.com/user-attachments/assets/03f8c9bb-6fcc-40f5-b3d4-ae08c5849803" width="30%" />
+  <img src="https://github.com/user-attachments/assets/d71d8674-dd17-42fd-ab0b-160d01007b19" width=30%" />
+  <img src="https://github.com/user-attachments/assets/9c3f3d03-e5c7-43ad-bdd1-c2c410434951" width="30%" />
 </p>
 
 ---
@@ -71,8 +71,7 @@
 
 ### 🔹 백엔드 (Backend)
 - **Spring Boot**  
-- Spring WebSocket (STOMP 프로토콜)  
-- SimpMessagingTemplate (실시간 메시징)  
+- Spring WebSocket (STOMP 프로토콜)    
 - AWS EC2 배포  
 
 ---
@@ -87,13 +86,11 @@
 - **턴 정보, 보드 상태, 남은 타일 개수** 등이 실시간으로 업데이트됩니다.
 
 ### 📌 페이지 이탈 유의
-- 게임 도중 **플레이어가 나가거나, 백그라운드 환경에서 진행되면 자동으로 항복** 처리가 됩니다.  
-- 이를 위해 `beforeunload` 및 `visibilitychange` 이벤트를 활용했습니다.
+- 게임 도중 **플레이어가 나가거나, 연결이 끊어지면 자동으로 패배** 처리가 됩니다.  .
 
 ---
 
 ## 🎮 플레이 데모 영상  
-![monorail-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/502220db-4f1a-4e08-aaa7-07aeafcd8e9d)
-
+![monorail-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/9b6373f4-a318-46e9-8369-ceef07e9a6fa)
 
 ---
