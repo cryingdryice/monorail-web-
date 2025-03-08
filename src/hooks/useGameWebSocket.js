@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
+import turnSound from "assets/turn.mp3";
+import impossibleSound from "assets/impossible.mp3";
 
 // const SOCKET_URL = "http://localhost:8080/ws-game";
 const SOCKET_URL = "http://3.36.103.12:8080/ws-game";
@@ -12,6 +14,12 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
     const [isMyTurn, setIsMyTurn] = useState(isFirst === "true");
     const [winner, setWinner] = useState("");
     const navigate = useNavigate();
+
+    // 효과음 파일 로드 (public 폴더에 저장된 경우)
+    const redSign = new Audio(impossibleSound); 
+    redSign.volume = 0.3; // 볼륨 조절
+    const turnChange = new Audio(turnSound); 
+    turnChange.volume = 0.3; // 볼륨 조절
 
     useEffect(() => {
         const socket = new SockJS(SOCKET_URL);
@@ -37,24 +45,6 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
                 if (["completed", "unfinished", "timeover", "surrender", "disconnected"].includes(data.gameStatus)) {
                     setGameStatus(data.gameStatus);
                     setWinner(data.winnerId);
-                    
-                    // ✅ 각 상태별 추가 함수 실행
-                    switch (data.gameStatus) {
-                        case "completed": // 모노레일을 완성했을 때
-                            console.log(data.gameStatus);
-                            break;
-                        case "unfinished": // 모노레일을 완성하지 못했을 때
-                            console.log(data.gameStatus);
-                            break;
-                        case "timeover": // 시간 초과 시
-                            console.log(data.gameStatus);
-                            break;
-                        case "surrender": // 항복했을 때
-                            console.log(data.gameStatus);
-                            break;
-                        case "disconnected":
-                            console.log(data.gameStatus);
-                    }
                 
                     // ✅ 공통 로직 실행
                     setTimeout(() => {
@@ -72,12 +62,14 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
                 setGameStatus(data.gameStatus);
                 setIsMyTurn(data.currentTurn === playerId);
                 setTilesCount(data.tilesCount);
+                turnChange.play().catch(err => console.log("효과음 재생 실패:", err));
             });
 
             client.subscribe(`/topic/impossible/${roomId}`, (message) => {
                 const data = JSON.parse(message.body);
                 setGameStatus(data.gameStatus);
                 setIsMyTurn(data.currentTurn === playerId);
+                redSign.play().catch(err => console.log("효과음 재생 실패:", err));
             });
         });
 

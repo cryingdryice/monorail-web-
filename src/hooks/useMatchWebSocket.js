@@ -18,7 +18,6 @@ export function useMatchWebSocket() {
 
   // ✅ 소켓 해제 시 실행할 함수
   const onSocketDisconnected = () => {
-    console.log("🔌 WebSocket 연결 해제됨");
     setIsMatched(false);
     setOpponentName("");
     setIsMatching(false);
@@ -36,7 +35,6 @@ export function useMatchWebSocket() {
 
       client.subscribe(`/queue/match/${clientId.current}`, (message) => {
         const data = JSON.parse(message.body);
-        console.log(data);
 
         if(data.isFirst === "canceled"){
           setShowCancelInfo(true);

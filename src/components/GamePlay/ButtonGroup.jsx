@@ -25,7 +25,7 @@ export function ButtonGroup({ isMyTurn, placedTiles, gameStatus, setTimeLeft, im
         onClick={checkEnd}
         disabled={!isMyTurn}
       >
-        {isMyTurn ? "배치 완료" : "상대 턴..."}
+        {isMyTurn ? "배치완료" : "상대 턴..."}
       </Button>
 
       {/* 🏳 항복 버튼 (딥 퍼플 네온) */}

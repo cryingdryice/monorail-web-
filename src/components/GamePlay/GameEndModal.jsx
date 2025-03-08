@@ -13,7 +13,7 @@ export function GameEndModal({ isWinner, cause }) {
 
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="relative w-[400px] h-[320px] flex flex-col items-center justify-center p-6 rounded-2xl border border-cyan-500/30 bg-gray-900/80 shadow-[0_0_25px_rgba(0,255,255,0.2)] backdrop-blur-md overflow-hidden">
+      <div className="relative w-[400px] h-[320px] flex flex-col items-center justify-center p-6 rounded-2xl border border-cyan-500/80 overflow-hidden">
         
         {/* 🟢 Animated neon border effect */}
         <div className="absolute inset-0 rounded-2xl border border-cyan-500/30 [box-shadow:0_0_15px_rgba(0,255,255,0.3),inset_0_0_15px_rgba(0,255,255,0.3)]"></div>

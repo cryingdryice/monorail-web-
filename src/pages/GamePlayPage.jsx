@@ -14,6 +14,7 @@ import { checkStraigh, checkStraightLine } from "utiles/checkStraight";
 import { checkAdjacent } from "utiles/checkAdjacent";
 import { Notification } from "components/GamePlay/Notification";
 import { ImpossibleNote } from "components/GamePlay/ImpossibleNote";
+import bbopSound from "assets/bbop.mp3";
 
 // 타일 종류 정의
 const tileTypes = ["0", "1", "2", "3", "4", "5"];
@@ -37,6 +38,10 @@ export default function GamePlayPage() {
   const opponentName = location.state?.opponentName || "Unknown Player"; // 상대방 닉네임
   const playerId = location.state?.playerId || "null"; // ✅ playerId 확인 // 내 아이디
   const { gameStatus, isMyTurn, winner, surrender, victory, endTurn, impossible } = useGameWebSocket(roomId, playerId, location.state?.isFirst, setBoardState, setTilesCount);
+
+  // 효과음 파일 로드 (public 폴더에 저장된 경우)
+  const tilePlaceSound = new Audio(bbopSound); 
+  tilePlaceSound.volume = 0.3; // 볼륨 조절
 
   // 타일 배치 함수 (GameBoard에서 호출)
   const placeTile = (row, col) => {
@@ -92,6 +97,8 @@ export default function GamePlayPage() {
 
     // ✅ 이번 턴에서 놓은 타일 좌표 저장
     setPlacedTiles(prev => [...prev, { row, col }]);
+
+    tilePlaceSound.play().catch(err => console.log("효과음 재생 실패:", err));
   };
 
   // 턴 종료 함수
