@@ -1,40 +1,16 @@
-"use client"
-
 import { useEffect, useState } from "react"
 
 export function Background() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-
-  // Subtle parallax effect based on mouse movement
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      })
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [])
 
   return (
     <div className="fixed inset-0 overflow-hidden">
       {/* Enhanced grid pattern with subtle animation */}
       <div className="absolute inset-0 z-0 opacity-20">
         <div
-          className="grid h-full w-full grid-cols-[repeat(40,1fr)] grid-rows-[repeat(20,1fr)]"
-          style={{
-            transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20}px)`,
-            transition: "transform 0.8s cubic-bezier(0.075, 0.82, 0.165, 1)",
-          }}
+          className="grid h-full w-full grid-cols-[repeat(20,1fr)] grid-rows-[repeat(10,1fr)]"
         >
-          {Array.from({ length: 800 }).map((_, i) => (
+          {Array.from({ length: 200 }).map((_, i) => (
             <div key={i} className="border border-gray-500 relative">
-              {/* Random glowing dots at grid intersections */}
-              {Math.random() > 0.96 && (
-                <div className="absolute -top-1 -left-1 h-2 w-2 rounded-full bg-cyan-100 blur-[4px] animate-pulse"></div>
-              )}
             </div>
           ))}
         </div>

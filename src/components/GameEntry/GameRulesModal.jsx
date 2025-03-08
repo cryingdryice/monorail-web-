@@ -13,10 +13,6 @@ export function GameRulesModal({ setShowRules }) {
         {/* Neon border effect */}
         <div className="absolute inset-0 rounded-xl border border-cyan-500/20 [box-shadow:0_0_10px_rgba(6,182,212,0.2),inset_0_0_10px_rgba(6,182,212,0.1)]"></div>
 
-        {/* Diagonal line decorations */}
-        <div className="absolute -right-10 top-0 h-[200%] w-[1px] bg-gradient-to-b from-transparent via-cyan-500/30 to-transparent transform rotate-[30deg]"></div>
-        <div className="absolute -left-10 bottom-0 h-[200%] w-[1px] bg-gradient-to-b from-transparent via-purple-500/30 to-transparent transform rotate-[30deg]"></div>
-
         {/* Horizontal accent lines */}
         <div className="absolute top-14 left-0 h-[1px] w-16 bg-gradient-to-r from-cyan-500/50 to-transparent"></div>
         <div className="absolute bottom-14 right-0 h-[1px] w-16 bg-gradient-to-l from-purple-500/50 to-transparent"></div>

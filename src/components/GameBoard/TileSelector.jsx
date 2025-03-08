@@ -61,11 +61,6 @@ export default function TileSelector({ tileTypes, selectedTile, setSelectedTile 
                 {isSelected && <div className="absolute inset-0 bg-cyan-500/10 rounded-md"></div>}
                 <Tiles type={tile} />
               </div>
-
-              {/* Selection indicator dot */}
-              {isSelected && (
-                <div className="absolute -bottom-0.5 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-500 shadow-[0_0_5px_rgba(6,182,212,0.7)]"></div>
-              )}
             </button>
           </div>
         )

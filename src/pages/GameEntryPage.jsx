@@ -7,8 +7,9 @@ import { MatchedModal } from "components/GameEntry/MatchedModal";
 import { GameRulesModal } from "components/GameEntry/GameRulesModal";
 import { HelpIcon } from "components/ui/help_icon";
 import { MatchingForm } from "components/GameEntry/MatchingForm";
-import { FaGithub, FaVolumeMute, FaVolumeUp } from "react-icons/fa"
 import bgmFile from "assets/monorail_bgm.mp3";
+import { GithubIcon } from "components/ui/github_icon";
+import { SoundIcon } from "components/ui/sound_icon";
 
 export default function GameEntryPage() {
   const [nickname, setNickname] = useState("");
@@ -53,19 +54,10 @@ export default function GameEntryPage() {
       <HelpIcon setShowRules={setShowRules}/>
 
       {/* 🐙 GitHub 아이콘 (우측 상단 고정) */}
-      <a href="https://github.com/cryingdryice/monorail-web-" 
-         target="_blank" rel="noopener noreferrer" 
-         className="absolute top-16 right-4 text-gray-400 text-3xl transition-transform transform hover:text-white">
-        <FaGithub />
-      </a>
+      <GithubIcon />
 
       {/* 음소거 버튼 (아이콘 적용) */}
-      <button
-        onClick={toggleMute}
-        className="absolute top-28 right-4 text-gray-400 text-3xl transition-transform transform hover:text-white"
-      >
-        {isMuted ? <FaVolumeMute /> : <FaVolumeUp />}
-      </button>
+      <SoundIcon isMuted={isMuted} toggleMute={toggleMute} />
 
       {/* Main content */}
       <MatchingForm nickname={nickname} isMatching={isMatching} setNickname={setNickname} sendMatchRequest={sendMatchRequest} sendMatchCancelRequest={sendMatchCancelRequest}/>

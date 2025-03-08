@@ -7,15 +7,6 @@ export function Notification({notification}){
                   [text-shadow:0_0_10px_rgba(6,182,212,0.7)]">
           {notification}
           </p>
-
-          {/* 네온 글로우 효과 */}
-          <div className="absolute inset-0 rounded-lg border border-cyan-500/50 
-                    [box-shadow:0_0_20px_rgba(6,182,212,0.5),inset_0_0_20px_rgba(6,182,212,0.3)]">
-          </div>
-
-          {/* 사이버틱한 빛나는 선 */}
-          <div className="absolute -top-2 left-4 w-6 h-[2px] bg-cyan-400/80 blur-sm"></div>
-          <div className="absolute -bottom-2 right-4 w-6 h-[2px] bg-purple-400/80 blur-sm"></div>
         </div>
     );
 };

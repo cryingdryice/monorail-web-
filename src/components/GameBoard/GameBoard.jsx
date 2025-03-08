@@ -20,9 +20,6 @@ export default function GameBoard({ boardState, placeTile }) {
         }}
       >
 
-        {/* Scanline effect */}
-        <div className="absolute inset-0 bg-scanline opacity-10 pointer-events-none"></div>
-
         {/* Corner accents */}
         <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-cyan-500/70 rounded-tl-sm"></div>
         <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-purple-500/70 rounded-tr-sm"></div>

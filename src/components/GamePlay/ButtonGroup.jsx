@@ -38,12 +38,6 @@ export function ButtonGroup({ isMyTurn, placedTiles, gameStatus, setTimeLeft, im
         항복
       </Button>
 
-      {/* 🌌 네온 빛나는 애니메이션 라인 추가 */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-1/2 top-0 w-[120%] h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse"></div>
-        <div className="absolute left-1/2 bottom-0 w-[120%] h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-pulse"></div>
-      </div>
-
     </div>
   );
 }
