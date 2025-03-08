@@ -12,6 +12,8 @@ import { ButtonGroup } from "components/GamePlay/ButtonGroup";
 import { GameEndModal } from "components/GamePlay/GameEndModal";
 import { checkStraigh, checkStraightLine } from "utiles/checkStraight";
 import { checkAdjacent } from "utiles/checkAdjacent";
+import { Notification } from "components/GamePlay/Notification";
+import { ImpossibleNote } from "components/GamePlay/ImpossibleNote";
 
 // 타일 종류 정의
 const tileTypes = ["0", "1", "2", "3", "4", "5"];
@@ -156,15 +158,11 @@ export default function GamePlayPage() {
       <ButtonGroup isMyTurn={isMyTurn} placedTiles={placedTiles} gameStatus={gameStatus} setTimeLeft={setTimeLeft} impossible={impossible} checkEnd={checkEnd} surrender={surrender}/>
 
       {notification && (
-        <div className="z-20 absolute top-6 right-6 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg">
-          {notification}
-        </div>
+        <Notification notification={notification} />
       )}
 
       {gameStatus === "impossible" && (
-        <div className="z-20 absolute top-2 right-0 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in">
-          불가능 선언!
-        </div>
+        <ImpossibleNote />
       )}
 
       {["completed", "unfinished", "timeover", "surrender", "disconnected"].includes(gameStatus) && (

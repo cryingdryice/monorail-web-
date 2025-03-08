@@ -7,6 +7,7 @@ import { MatchedModal } from "components/GameEntry/MatchedModal";
 import { GameRulesModal } from "components/GameEntry/GameRulesModal";
 import { HelpIcon } from "components/ui/help_icon";
 import { MatchingForm } from "components/GameEntry/MatchingForm";
+import { FaGithub } from "react-icons/fa"
 
 export default function GameEntryPage() {
   const [nickname, setNickname] = useState("");
@@ -19,6 +20,13 @@ export default function GameEntryPage() {
 
       {/* ❓아이콘 (게임 설명 버튼) */}
       <HelpIcon setShowRules={setShowRules}/>
+
+      {/* 🐙 GitHub 아이콘 (우측 상단 고정) */}
+      <a href="https://github.com/cryingdryice/monorail-web-" 
+         target="_blank" rel="noopener noreferrer" 
+         className="absolute top-16 right-4 text-gray-400 text-3xl transition-transform transform hover:text-white">
+        <FaGithub />
+      </a>
 
       {/* Main content */}
       <MatchingForm nickname={nickname} isMatching={isMatching} setNickname={setNickname} sendMatchRequest={sendMatchRequest} sendMatchCancelRequest={sendMatchCancelRequest}/>
