@@ -1,10 +1,14 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Tiles } from "components/tiles"
+import { useState, memo, useCallback } from "react";
+import { Tiles } from "components/tiles";
 
-export default function GameBoard({ boardState, placeTile }) {
-  const [hoverCell, setHoverCell] = useState(null)
+const GameBoard = memo(({ boardState, placeTile }) => {
+  const [hoverCell, setHoverCell] = useState(null);
+
+  const memoizedPlaceTile = useCallback((row, col) => {
+    placeTile(row, col);
+  }, [placeTile]);
 
   return (
     <div className="relative z-10">
@@ -19,7 +23,6 @@ export default function GameBoard({ boardState, placeTile }) {
           boxShadow: "0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.5)",
         }}
       >
-
         {/* Corner accents */}
         <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-cyan-500/70 rounded-tl-sm"></div>
         <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-purple-500/70 rounded-tr-sm"></div>
@@ -29,7 +32,7 @@ export default function GameBoard({ boardState, placeTile }) {
         {/* Game cells */}
         {boardState.map((row, rowIndex) =>
           row.map((tile, colIndex) => {
-            const isHovered = hoverCell === `${rowIndex}-${colIndex}`
+            const isHovered = hoverCell === `${rowIndex}-${colIndex}`;
             return (
               <div
                 key={`${rowIndex}-${colIndex}`}
@@ -38,7 +41,7 @@ export default function GameBoard({ boardState, placeTile }) {
                 }`}
                 onMouseEnter={() => setHoverCell(`${rowIndex}-${colIndex}`)}
                 onMouseLeave={() => setHoverCell(null)}
-                onClick={() => placeTile(rowIndex, colIndex)}
+                onClick={() => memoizedPlaceTile(rowIndex, colIndex)}
               >
                 {/* Cell background with hover effect */}
                 <div
@@ -53,11 +56,15 @@ export default function GameBoard({ boardState, placeTile }) {
                 {/* Tile content */}
                 <div className="relative">{tile && <Tiles type={tile} />}</div>
               </div>
-            )
-          }),
+            );
+          })
         )}
       </div>
     </div>
-  )
-}
+  );
+}, (prevProps, nextProps) => {
+  return prevProps.boardState === nextProps.boardState &&
+         prevProps.placeTile === nextProps.placeTile;
+});
 
+export default GameBoard;

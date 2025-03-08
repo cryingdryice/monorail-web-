@@ -1,30 +1,29 @@
-"use client"
+import { memo } from "react";
 
-export function Tiles({ type }) {
-  // Railway track base style
-  const trackBaseStyle = {
-    stroke: "#3052af", // Dark blue base for the track
-    strokeWidth: "12",
-    strokeLinecap: "round",
-  }
-  
-  // Railway track inner line style
-  const trackInnerStyle = {
-    stroke: "#2a3f4d", // Slightly lighter than base for dimension
-    strokeWidth: "8",
-    strokeLinecap: "round",
-  }
-  
-  // Energy flow glow effect (ALWAYS MOVING)
-  const energyGlowStyle = {
-    stroke: "#4eeaff", // Bright cyan for energy
-    strokeWidth: "4",
-    strokeLinecap: "round",
-    filter: "drop-shadow(0px 0px 5px rgba(78, 234, 255, 0.8)) drop-shadow(0px 0px 12px rgba(78, 234, 255, 0.5))",
-    strokeDasharray: "20, 20", // Glow segments
-    strokeDashoffset: "0",
-    animation: "energyFlow 1.5s linear infinite", // Always animated
-  }
+// 타일별 기본 스타일 정의
+const trackBaseStyle = {
+  stroke: "#3052af",
+  strokeWidth: "12",
+  strokeLinecap: "round",
+};
+
+const trackInnerStyle = {
+  stroke: "#2a3f4d",
+  strokeWidth: "8",
+  strokeLinecap: "round",
+};
+
+const energyGlowStyle = {
+  stroke: "#4eeaff",
+  strokeWidth: "4",
+  strokeLinecap: "round",
+  filter: "drop-shadow(0px 0px 5px rgba(78, 234, 255, 0.8)) drop-shadow(0px 0px 12px rgba(78, 234, 255, 0.5))",
+  strokeDasharray: "20, 20",
+  strokeDashoffset: "40", // 초기값 설정
+  animation: "energyFlow 1.5s linear infinite",
+};
+
+const Tiles = memo(({ type }) => {
 
   const tileShapes = {
     0: (
@@ -176,10 +175,10 @@ export function Tiles({ type }) {
   }
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <>
       {tileShapes[type]}
 
-      {/* ✅ 항상 실행되는 에너지 흐름 애니메이션 추가 */}
+      {/* ✅ CSS 애니메이션 적용 */}
       <style jsx>{`
         @keyframes energyFlow {
           0% {
@@ -190,6 +189,8 @@ export function Tiles({ type }) {
           }
         }
       `}</style>
-    </div>
-  )
-}
+    </>
+  );
+});
+
+export { Tiles };

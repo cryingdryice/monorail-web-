@@ -5,7 +5,6 @@ import { over } from "stompjs";
 import turnSound from "assets/turn.mp3";
 import impossibleSound from "assets/impossible.mp3";
 
-// const SOCKET_URL = "http://localhost:8080/ws-game";
 const SOCKET_URL = "http://3.36.103.12:8080/ws-game";
 
 export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTilesCount) {
@@ -15,24 +14,25 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
     const [winner, setWinner] = useState("");
     const navigate = useNavigate();
 
-    // 효과음 파일 로드 (public 폴더에 저장된 경우)
-    const redSign = new Audio(impossibleSound); 
-    redSign.volume = 0.3; // 볼륨 조절
-    const turnChange = new Audio(turnSound); 
-    turnChange.volume = 0.3; // 볼륨 조절
+    // ✅ useRef를 활용한 오디오 객체 최적화
+    const redSignRef = useRef(null);
+    const turnChangeRef = useRef(null);
 
     useEffect(() => {
+        // 🔹 오디오 객체를 한 번만 생성
+        redSignRef.current = new Audio(impossibleSound);
+        redSignRef.current.volume = 0.3;
+        turnChangeRef.current = new Audio(turnSound);
+        turnChangeRef.current.volume = 0.3;
+
         const socket = new SockJS(SOCKET_URL);
         const client = over(socket);
         client.debug = null;
 
         client.connect({}, () => {
             stompClient.current = client;
-
-            // ✅ WebSocket 세션 ID 가져오기
             const sessionId = socket._transport.url.split("/")[5];
 
-            // ✅ 플레이어가 게임방에 입장했음을 백엔드에 알림
             client.send(
                 "/app/game/join",
                 {},
@@ -41,19 +41,17 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
 
             client.subscribe(`/topic/game/${roomId}`, (message) => {
                 const data = JSON.parse(message.body);
-
                 if (["completed", "unfinished", "timeover", "surrender", "disconnected"].includes(data.gameStatus)) {
                     setGameStatus(data.gameStatus);
                     setWinner(data.winnerId);
-                
-                    // ✅ 공통 로직 실행
+
                     setTimeout(() => {
                         if (client.connected) {
                             client.disconnect();
                         }
                         navigate("/");
                     }, 3000);
-                }                
+                }
             });
 
             client.subscribe(`/topic/turn/${roomId}`, (message) => {
@@ -62,14 +60,24 @@ export function useGameWebSocket(roomId, playerId, isFirst, setBoardState, setTi
                 setGameStatus(data.gameStatus);
                 setIsMyTurn(data.currentTurn === playerId);
                 setTilesCount(data.tilesCount);
-                turnChange.play().catch(err => console.log("효과음 재생 실패:", err));
+
+                // ✅ 최적화된 사운드 재생
+                if (turnChangeRef.current) {
+                    turnChangeRef.current.currentTime = 0; // 즉시 재생
+                    turnChangeRef.current.play().catch(err => console.log("효과음 재생 실패:", err));
+                }
             });
 
             client.subscribe(`/topic/impossible/${roomId}`, (message) => {
                 const data = JSON.parse(message.body);
                 setGameStatus(data.gameStatus);
                 setIsMyTurn(data.currentTurn === playerId);
-                redSign.play().catch(err => console.log("효과음 재생 실패:", err));
+
+                // ✅ 최적화된 사운드 재생
+                if (redSignRef.current) {
+                    redSignRef.current.currentTime = 0; // 즉시 재생
+                    redSignRef.current.play().catch(err => console.log("효과음 재생 실패:", err));
+                }
             });
         });
 

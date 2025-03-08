@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import GameBoard from "components/GameBoard/GameBoard";
 import TileSelector from "components/GameBoard/TileSelector";
 import { useLocation, useParams } from "react-router-dom";
@@ -20,11 +18,12 @@ import bbopSound from "assets/bbop.mp3";
 const tileTypes = ["0", "1", "2", "3", "4", "5"];
 
 export default function GamePlayPage() {
-  const [tilesCount, setTilesCount] = useState(16); // 남은 타일 개수
-  const [tilesPlaced, setTilesPlaced] = useState(0); // 현재 턴에서 배치한 타일 개수
-  const [placedTiles, setPlacedTiles] = useState([]); // 이번 턴에서 놓은 타일들의 좌표 저장
-  const [timeLeft, setTimeLeft] = useState(60); // 타이머 (30초)
-  const [selectedTile, setSelectedTile] = useState(null); // 현재 선택한 타일
+  const [tilesCount, setTilesCount] = useState(16);
+  const [tilesPlaced, setTilesPlaced] = useState(0);
+  const [placedTiles, setPlacedTiles] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const timeRef = useRef(timeLeft);
+  const [selectedTile, setSelectedTile] = useState(null);
   const [boardState, setBoardState] = useState(() => {
     const initialBoard = Array(10).fill(null).map(() => Array(10).fill(null));
     initialBoard[4][4] = "0";
@@ -33,52 +32,56 @@ export default function GamePlayPage() {
   });
   const [notification, setNotification] = useState(null);
 
-  const { roomId } = useParams(); // url에서 rommId받아옴
+  const { roomId } = useParams();
   const location = useLocation();
-  const opponentName = location.state?.opponentName || "Unknown Player"; // 상대방 닉네임
-  const playerId = location.state?.playerId || "null"; // ✅ playerId 확인 // 내 아이디
-  const { gameStatus, isMyTurn, winner, surrender, victory, endTurn, impossible } = useGameWebSocket(roomId, playerId, location.state?.isFirst, setBoardState, setTilesCount);
+  const opponentName = location.state?.opponentName || "Unknown Player";
+  const playerId = location.state?.playerId || "null";
+  const { gameStatus, isMyTurn, winner, surrender, victory, endTurn, impossible } = useGameWebSocket(
+    roomId,
+    playerId,
+    location.state?.isFirst,
+    setBoardState,
+    setTilesCount
+  );
 
-  // 효과음 파일 로드 (public 폴더에 저장된 경우)
-  const tilePlaceSound = new Audio(bbopSound); 
-  tilePlaceSound.volume = 0.3; // 볼륨 조절
+  // ✅ useRef를 활용하여 Audio 객체를 재사용
+  const tilePlaceSoundRef = useRef(null);
+
+  useEffect(() => {
+    tilePlaceSoundRef.current = new Audio(bbopSound);
+    tilePlaceSoundRef.current.volume = 0.3;
+  }, []);
 
   // 타일 배치 함수 (GameBoard에서 호출)
   const placeTile = (row, col) => {
     if (selectedTile === null) return;
-  
-    // 🚫 현재 턴이 아닌 플레이어는 타일을 놓을 수 없음
+
     if (!isMyTurn) {
       showNotification("지금은 상대방의 턴입니다!");
       return;
     }
 
-    if(tilesCount <= 0){
+    if (tilesCount <= 0) {
       showNotification("타일을 모두 소모했습니다!");
       return;
     }
-  
-    // 🚫 이미 배치된 타일이 있는 경우 배치 불가
+
     if (boardState[row][col] !== null) {
       showNotification("이미 배치된 위치입니다!");
       return;
     }
-  
-    // 불가능선언 상황이 아닐 경우
-    if(gameStatus !== "impossible"){
-      // 🚫 한 턴에 3개 이상 배치할 수 없음
+
+    if (gameStatus !== "impossible") {
       if (tilesPlaced >= 3) {
         showNotification("한 턴에 최대 3개의 타일만 놓을 수 있습니다!");
         return;
       }
-    
-      // ✅ 기존 타일과 인접한지 확인
+
       if (!checkAdjacent(boardState, row, col)) {
         showNotification("기존 타일과 맞닿아야 합니다!");
         return;
       }
 
-      // ✅ 이번 턴에서 놓은 타일들이 일직선인지 확인
       if (!checkStraigh(placedTiles, { row, col })) {
         showNotification("이번 턴에 놓은 타일들은 반드시 일직선을 이루어야 합니다!");
         return;
@@ -90,15 +93,17 @@ export default function GamePlayPage() {
       r.map((tile, colIndex) => (rowIndex === row && colIndex === col ? selectedTile : tile))
     );
 
-    setBoardState(updatedBoard); // ✅ UI 상태 업데이트
-    setTilesPlaced(prev => prev + 1); // 현재 턴에서 배치한 타일 개수 증가
-    setTilesCount(prev => prev - 1);
+    setBoardState(updatedBoard);
+    setTilesPlaced((prev) => prev + 1);
+    setTilesCount((prev) => prev - 1);
     setSelectedTile(null);
+    setPlacedTiles((prev) => [...prev, { row, col }]);
 
-    // ✅ 이번 턴에서 놓은 타일 좌표 저장
-    setPlacedTiles(prev => [...prev, { row, col }]);
-
-    tilePlaceSound.play().catch(err => console.log("효과음 재생 실패:", err));
+    // ✅ 최적화된 오디오 재생
+    if (tilePlaceSoundRef.current) {
+      tilePlaceSoundRef.current.currentTime = 0; // 음원 지연 방지 (즉시 재생)
+      tilePlaceSoundRef.current.play().catch((err) => console.log("효과음 재생 실패:", err));
+    }
   };
 
   // 턴 종료 함수
@@ -121,20 +126,20 @@ export default function GamePlayPage() {
   };
   
   useEffect(() => {
-    if (!isMyTurn) return; // 🚫 내 턴이 아닐 때는 타이머 정지
+    if (!isMyTurn) return;
   
+    timeRef.current = timeLeft;
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev === 1) {
-          surrender("timeover"); // ✅ 시간 초과 시 자동 항복
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
+      if (timeRef.current === 1) {
+        surrender("timeover");
+        clearInterval(timer);
+      } else {
+        timeRef.current -= 1;
+        setTimeLeft(timeRef.current); 
+      }
     }, 1000);
   
-    return () => clearInterval(timer); // ✅ 컴포넌트 언마운트 시 타이머 제거
+    return () => clearInterval(timer);
   }, [isMyTurn]);
 
   // ✅ 알림 메시지 표시 함수
@@ -147,36 +152,30 @@ export default function GamePlayPage() {
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-black text-white">
       <Background />
 
-      {/* 상대방 닉네임 */}
       <div className="absolute top-2 text-2xl font-semibold text-gray-300 z-10">
         상대: <span className="text-cyan-400">{opponentName}</span>
       </div>
 
-      {/* 게임 보드 */}
       <GameBoard boardState={boardState} placeTile={placeTile} />
 
-      {/* 타일 선택 컴포넌트 */}
       <TileSelector tileTypes={tileTypes} selectedTile={selectedTile} setSelectedTile={setSelectedTile} />
 
-      {/* 타이머 & 남은 타일 */}
       <GameInfoBar timeLeft={timeLeft} tilesCount={tilesCount} />
 
-      {/* 버튼 그룹 */}
-      <ButtonGroup isMyTurn={isMyTurn} placedTiles={placedTiles} gameStatus={gameStatus} setTimeLeft={setTimeLeft} impossible={impossible} checkEnd={checkEnd} surrender={surrender}/>
+      <ButtonGroup
+        isMyTurn={isMyTurn}
+        placedTiles={placedTiles}
+        gameStatus={gameStatus}
+        setTimeLeft={setTimeLeft}
+        impossible={impossible}
+        checkEnd={checkEnd}
+        surrender={surrender}
+      />
 
-      {notification && (
-        <Notification notification={notification} />
-      )}
-
-      {gameStatus === "impossible" && (
-        <ImpossibleNote />
-      )}
-
+      {notification && <Notification notification={notification} />}
+      {gameStatus === "impossible" && <ImpossibleNote />}
       {["completed", "unfinished", "timeover", "surrender", "disconnected"].includes(gameStatus) && (
-        <GameEndModal 
-          isWinner={winner === playerId} 
-          cause={gameStatus}
-        />
+        <GameEndModal isWinner={winner === playerId} cause={gameStatus} />
       )}
     </div>
   );
